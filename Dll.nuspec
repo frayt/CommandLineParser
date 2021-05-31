@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>com.fray.CommandLineParser</id>
+    <version>1.0.1</version>
+    <title>CommandLineParser</title>
+    <authors>Fraser</authors>
+    <owners>Fraser</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Command line parser</description>
+    <releaseNotes>
+     1.0.1 - Refactor: comments, move stuff around
+     1.0.0 - Initial release
+    </releaseNotes>
+    <copyright>Copyright 2021</copyright>
+    <dependencies>
+    </dependencies>
+  </metadata>
+  
+  <files>
+    <file src="CommandLineParser\bin\Debug\CommandLineParser.dll" target="lib\net471\Debug" />
+    <file src="CommandLineParser\bin\Debug\CommandLineParser.pdb" target="lib\net471\Debug" />
+    <file src="CommandLineParser\bin\Debug\CommandLineParser.xml" target="lib\net471\Debug" />
+  </files>
+</package>

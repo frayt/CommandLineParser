@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31313.79
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineParser", "CommandLineParser\CommandLineParser.csproj", "{55A76FDE-3734-4F03-B59E-1040DBF92F57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{030FCE3E-CF03-47F2-90F0-DEF91858929D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55A76FDE-3734-4F03-B59E-1040DBF92F57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55A76FDE-3734-4F03-B59E-1040DBF92F57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55A76FDE-3734-4F03-B59E-1040DBF92F57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55A76FDE-3734-4F03-B59E-1040DBF92F57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{030FCE3E-CF03-47F2-90F0-DEF91858929D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{030FCE3E-CF03-47F2-90F0-DEF91858929D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{030FCE3E-CF03-47F2-90F0-DEF91858929D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{030FCE3E-CF03-47F2-90F0-DEF91858929D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8CB2AD48-7789-46A5-9693-74518C212190}
+	EndGlobalSection
+EndGlobal
