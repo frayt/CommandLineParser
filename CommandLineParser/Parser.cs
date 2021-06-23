@@ -32,10 +32,10 @@ namespace Fray.CommandLineParser
             if (expectedOptions == null)
                 throw new ArgumentNullException();
 
-            if (args == null || args.Length == 0)
-                return null;
-
             Options options = new Options();
+
+            if (args == null || args.Length == 0)
+                return options;
 
             FoundOption currentOption = null;
 
