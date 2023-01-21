@@ -30,6 +30,9 @@ namespace Fray.CommandLineParser
             /// <summary>One or more sub args are expected on this option.  Ex: --files a.txt b.txt c.txt</summary>
             OneOrMoreParams,
         }
+        /// <summary>
+        /// Parameter type
+        /// </summary>
         public readonly EType type;
 
         /// <summary>
