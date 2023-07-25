@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net46;net46;net472</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net46;net472</TargetFrameworks>
     <Version>1.1.0-fraser.5</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
