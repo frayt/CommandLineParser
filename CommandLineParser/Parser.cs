@@ -15,7 +15,7 @@ namespace Fray.CommandLineParser
             public ExpectedOption expectedOption; // This holds the ExpectionOption we just matched up against
             public bool optionWasShortVersion;
             // The actual text, like -h or --help
-            public string actualOptionString { get { return optionWasShortVersion ? "-" + expectedOption.shortOption : "--" + expectedOption.option; } }
+            public string actualOptionString { get { return optionWasShortVersion ? "-" + expectedOption.ShortOption : "--" + expectedOption.Option; } }
         }
 
         // Returns null if there are no options at all
@@ -49,9 +49,9 @@ namespace Fray.CommandLineParser
                 FoundOption foundOption = null;
                 foreach (var eo in expectedOptions)
                 {
-                    if (arg == "--" + eo.option)
+                    if (arg == "--" + eo.Option)
                         { foundOption = new FoundOption { expectedOption = eo, optionWasShortVersion = false }; break; }
-                    if (arg == "-" + eo.shortOption)
+                    if (!string.IsNullOrWhiteSpace(eo.ShortOption) && arg == "-" + eo.ShortOption)
                         { foundOption = new FoundOption { expectedOption = eo, optionWasShortVersion = true }; break; }
                 }
 
@@ -65,7 +65,7 @@ namespace Fray.CommandLineParser
                     // Check for errors:
                     // If the current option needs params, and we haven't seen enough yet, error!
                     if (    currentOption != null
-                        && (currentOption.expectedOption.type == ExpectedOption.EType.OneParam || currentOption.expectedOption.type == ExpectedOption.EType.OneOrMoreParams)
+                        && (currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.OneParam || currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.OneOrMoreParams)
                         &&  currentOption.option.args.Count == 0
                        )
                     {
@@ -73,7 +73,7 @@ namespace Fray.CommandLineParser
                     }
 
                     // Add this new option
-                    Option option = new Option(foundOption.expectedOption.option);
+                    Option option = new Option(foundOption.expectedOption.Option);
                     options.options.Add(option);
                     foundOption.option = option;
 
@@ -84,10 +84,10 @@ namespace Fray.CommandLineParser
                 {
                     // Check for errors:
                     // If the current option doesn't expect extra args, error!
-                    if (currentOption != null && currentOption.expectedOption.type == ExpectedOption.EType.StandAlone)
+                    if (currentOption != null && currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.StandAlone)
                         throw new ParseException($"Unexpected arg after option '{currentOption.actualOptionString}'");
                     // If the current option expects 1 param, and this is 2+, error!
-                    if (currentOption != null && currentOption.expectedOption.type == ExpectedOption.EType.OneParam && currentOption.option.args.Count == 1)
+                    if (currentOption != null && currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.OneParam && currentOption.option.args.Count == 1)
                         throw new ParseException($"Unexpected second arg after option '{currentOption.actualOptionString}'");
 
                     // If we have a current option, then add this arg (error checks have already been done)
@@ -100,6 +100,15 @@ namespace Fray.CommandLineParser
                         options.standAloneArgs.Add(arg);
                     }
                 }
+            }
+
+            // If we are in a "current option", and it expected a param, but never got it, error!
+            if (   currentOption != null
+                && currentOption.expectedOption.OptionType != ExpectedOption.EOptionType.StandAlone
+                && currentOption.option.args.Count == 0
+               )
+            {
+                throw new ParseException($"Expected one arg after option '{currentOption.actualOptionString}'");
             }
 
             return options;
