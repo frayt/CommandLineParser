@@ -18,6 +18,10 @@ using System;
 using System.Collections.Generic;
 using Fray.CommandLineParser;
 
+// Example usage of this sample:
+// CopyFilesTool.exe source dest --verbose --timeout 30 --ignore-these-files a.txt b.txt c.txt
+// CopyFilesTool.exe source dest -t 30 -v -i a.txt b.txt c.txt
+
 public static class CopyFilesTool
 {
     private readonly static ExpectedOption _option_timeout =
@@ -30,7 +34,7 @@ public static class CopyFilesTool
         new ExpectedOptionWithHelp("help", "h", ExpectedOption.EOptionType.StandAlone, null, "Show Usage/Help");
 
     private static ExpectedOption[] _expectedOptions;
-    public static int Main_(string[] args)
+    public static int Main(string[] args)
     {
         _expectedOptions = new ExpectedOption[]
         {
@@ -51,7 +55,7 @@ public static class CopyFilesTool
             return 1;
         }
 
-        if (options.OptionExists("help"))
+        if (options.OptionExists(_option_help))
         {
             ShowUsage();
             return 0;
