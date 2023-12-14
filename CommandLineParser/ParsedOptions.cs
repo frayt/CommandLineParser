@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace Fray.CommandLineParser
@@ -6,18 +7,18 @@ namespace Fray.CommandLineParser
     /// <summary>
     /// This holds the results of parsing the supplied command line args with the Parser.Parse function.
     /// </summary>
-    public class Options
+    public class ParsedOptions
     {
         /// <summary>
         /// The list of parsed Option objects
         /// </summary>
-        public readonly List<Option> options = new List<Option>();
+        public readonly List<Option> Options = new List<Option>();
 
         /// <summary>
         /// Extra stand alone args that aren't -- or - options.
         /// Ex: "copy srcFile destFile --timeout 30"  srcFile and destFile would be in this list
         /// </summary>
-        public readonly List<string> standAloneArgs = new List<string>();
+        public readonly List<string> StandAloneArgs = new List<string>();
 
         /// <summary>
         /// Does a simple check to see if the request option exists
@@ -26,7 +27,7 @@ namespace Fray.CommandLineParser
         /// <returns>true if option exists</returns>
         public bool OptionExists(string option)
         {
-            return options.Find(o => o.name == option) != null;
+            return Options.Find(o => o.Name == option) != null;
         }
 
         /// <summary>
@@ -36,7 +37,9 @@ namespace Fray.CommandLineParser
         /// <returns>true if option exists</returns>
         public bool OptionExists(ExpectedOption option)
         {
-            return options.Find(o => o.name == option.Option) != null;
+            if (option == null)
+                throw new ArgumentNullException(nameof(option));
+            return Options.Find(o => o.Name == option.Option) != null;
         }
 
         /// <summary>
@@ -44,9 +47,9 @@ namespace Fray.CommandLineParser
         /// </summary>
         /// <param name="option">long/full name of option you are matching against</param>
         /// <returns>Returns Option if exists, otherwise returns null</returns>
-        public Option GetOption(string option)
+        internal Option GetOption(string option)
         {
-            return options.Find(o => o.name == option);
+            return Options.Find(o => o.Name == option);
         }
 
         /// <summary>
@@ -54,8 +57,10 @@ namespace Fray.CommandLineParser
         /// </summary>
         /// <param name="option">The ExpectedOption that you are matching against</param>
         /// <returns>Returns Option if exists, otherwise returns null</returns>
-        public Option GetOption(ExpectedOption option)
+        internal Option GetOption(ExpectedOption option)
         {
+            if (option == null)
+                throw new ArgumentNullException(nameof(option));
             return GetOption(option.Option);
         }
 
@@ -71,9 +76,9 @@ namespace Fray.CommandLineParser
             Option o = GetOption(option);
             if (o == null)
                 return null;
-            if (o.args.Count == 0)
+            if (o.ArgsCount == 0)
                 return null;
-            return o.args[0];
+            return o.Args[0];
         }
 
         /// <summary>
@@ -85,7 +90,40 @@ namespace Fray.CommandLineParser
         /// <returns>The sub arg</returns>
         public string GetOptionSingleArg(ExpectedOption option)
         {
+            if (option == null)
+                throw new ArgumentNullException(nameof(option));
             return GetOptionSingleArg(option.Option);
+        }
+
+        /// <summary>
+        /// If an option expects one or more sub args, this retrieves them.
+        /// Ex: If your tool's Copy command looked like this: "Copy srcFile destFile --ignore a.txt b.txt c.txt"
+        ///  GetOptionSingleArg("timeout") would return the list "a.txt","b.txt","c.txt"
+        /// </summary>
+        /// <param name="option">long/full name of option</param>
+        /// <returns>The sub args</returns>
+        public IReadOnlyList<string> GetOptionOneOrMoreArgs(string option)
+        {
+            Option o = GetOption(option);
+            if (o == null)
+                return null;
+            if (o.ArgsCount == 0)
+                return null;
+            return o.Args;
+        }
+
+        /// <summary>
+        /// If an option expects one or more sub args, this retrieves them.
+        /// Ex: If your tool's Copy command looked like this: "Copy srcFile destFile --ignore a.txt b.txt c.txt"
+        ///  GetOptionSingleArg("timeout") would return the list "a.txt","b.txt","c.txt"
+        /// </summary>
+        /// <param name="option">long/full name of option</param>
+        /// <returns>The sub args</returns>
+        public IReadOnlyList<string> GetOptionOneOrMoreArgs(ExpectedOption option)
+        {
+            if (option == null)
+                throw new ArgumentNullException(nameof(option));
+            return GetOptionOneOrMoreArgs(option.Option);
         }
     }
 }

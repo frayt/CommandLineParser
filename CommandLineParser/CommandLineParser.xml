@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CommandLineParser</name>
+    </assembly>
+    <members>
+        <member name="T:Fray.CommandLineParser.ExpectedOption">
+            <summary>
+            This is a single option that you might expect to see in the command line args.
+            Ex: Option:"help" for --help  ShortOption:"h" for -h   'help' is a stand alone arg
+             and so would be type "StandAlone"
+            Ex: Option:"timeout" for --timeout  ShortOption:"t" for -t   'timeout' would expect
+             one sub arg, so it's type would be "OneParam"
+            </summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ExpectedOption.Option">
+            <summary>
+            Long version:  ex: help    so the command line arg would be --help
+            </summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ExpectedOption.ShortOption">
+            <summary>
+            Short version:  ex: h    so the command line arg would be -h
+            </summary>
+        </member>
+        <member name="T:Fray.CommandLineParser.ExpectedOption.EOptionType">
+            <summary>
+            This is how you specify if any sub args are expected on the option
+            </summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ExpectedOption.EOptionType.StandAlone">
+            <summary>No sub args are expected on this option.  Ex: --help</summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ExpectedOption.EOptionType.OneParam">
+            <summary>One sub arg is expected on this option.  Ex: --timeout 30</summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ExpectedOption.EOptionType.OneOrMoreParams">
+            <summary>One or more sub args are expected on this option.  Ex: --files a.txt b.txt c.txt</summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ExpectedOption.OptionType">
+            <summary>
+            Parameter type
+            </summary>
+        </member>
+        <member name="M:Fray.CommandLineParser.ExpectedOption.#ctor(System.String,System.String,Fray.CommandLineParser.ExpectedOption.EOptionType)">
+            <summary>
+            Construct an ExpectedOption object
+            </summary>
+            <param name="option">Long name of option.  Ex: help</param>
+            <param name="shortOption">Short name of option.  Ex: h</param>
+            <param name="type">See EType enum for help</param>
+        </member>
+        <member name="M:Fray.CommandLineParser.ExpectedOption.GetHelpText">
+            <summary>
+            Get a help string for this ExpectedOption
+            </summary>
+            <returns>Help string, or null if not implemented</returns>
+        </member>
+        <member name="T:Fray.CommandLineParser.ExpectedOptionWithHelp">
+            <summary>
+            Convenience class extended from ExpectedOption that implements GetHelpText(), for easy Usage/Help reporting
+            </summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ExpectedOptionWithHelp.ImmediateHelpText">
+            <summary>
+            The text that follows your option text, such as 'filename' in "--export filename"
+            </summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ExpectedOptionWithHelp.FollowUpHelpText">
+            <summary>
+            One or more lines up folow up text, such as 'Exports all data to supplied filename'
+            </summary>
+        </member>
+        <member name="M:Fray.CommandLineParser.ExpectedOptionWithHelp.#ctor(System.String,System.String,Fray.CommandLineParser.ExpectedOption.EOptionType,System.String,System.String[])">
+            <summary>
+            Construct an ExpectedOptionWithHelp object
+            </summary>
+            <param name="option">Long name of option.  Ex: help</param>
+            <param name="shortOption">Short name of option.  Ex: h</param>
+            <param name="type">See EType enum for help</param>
+            <param name="immediateHelpText">Text that follows immediately after the "--your-option(-y)" text</param>
+            <param name="followUpHelpText">One or more lines of text that follow on subsequent lines</param>
+        </member>
+        <member name="M:Fray.CommandLineParser.ExpectedOptionWithHelp.GetHelpText">
+            <summary>
+            Get a help string for this ExpectedOption
+            </summary>
+        </member>
+        <member name="T:Fray.CommandLineParser.Option">
+            <summary>
+            A single parsed Option from the command line args
+            </summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.Option.Name">
+            <summary>
+            The long name of the found option.  Ex: help
+            </summary>
+        </member>
+        <member name="P:Fray.CommandLineParser.Option.Args">
+            <summary>
+            Any sub args for the option.  Ex: if name was "files", this might be a.txt, b.txt, c.txt
+            </summary>
+        </member>
+        <member name="P:Fray.CommandLineParser.Option.ArgsCount">
+            <summary>
+            Return the number of arguments in the Args list.
+            </summary>
+        </member>
+        <member name="T:Fray.CommandLineParser.ParsedOptions">
+            <summary>
+            This holds the results of parsing the supplied command line args with the Parser.Parse function.
+            </summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ParsedOptions.Options">
+            <summary>
+            The list of parsed Option objects
+            </summary>
+        </member>
+        <member name="F:Fray.CommandLineParser.ParsedOptions.StandAloneArgs">
+            <summary>
+            Extra stand alone args that aren't -- or - options.
+            Ex: "copy srcFile destFile --timeout 30"  srcFile and destFile would be in this list
+            </summary>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParsedOptions.OptionExists(System.String)">
+            <summary>
+            Does a simple check to see if the request option exists
+            </summary>
+            <param name="option">long/full name of option</param>
+            <returns>true if option exists</returns>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParsedOptions.OptionExists(Fray.CommandLineParser.ExpectedOption)">
+            <summary>
+            Does a simple check to see if the request option exists
+            </summary>
+            <param name="option">ExpectedOption you're checking against</param>
+            <returns>true if option exists</returns>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParsedOptions.GetOption(System.String)">
+            <summary>
+            Get Option object by option name
+            </summary>
+            <param name="option">long/full name of option you are matching against</param>
+            <returns>Returns Option if exists, otherwise returns null</returns>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParsedOptions.GetOption(Fray.CommandLineParser.ExpectedOption)">
+            <summary>
+            Get Option object by ExpectedOption
+            </summary>
+            <param name="option">The ExpectedOption that you are matching against</param>
+            <returns>Returns Option if exists, otherwise returns null</returns>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParsedOptions.GetOptionSingleArg(System.String)">
+            <summary>
+            If an option expects a single sub arg, this retrieves it.
+            Ex: If your tool's Copy command looked like this: "Copy srcFile destFile --timeout 30"
+             GetOptionSingleArg("timeout") would return "30"
+            </summary>
+            <param name="option">long/full name of option</param>
+            <returns>The sub arg</returns>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParsedOptions.GetOptionSingleArg(Fray.CommandLineParser.ExpectedOption)">
+            <summary>
+            If an option expects a single sub arg, this retrieves it.
+            Ex: If your tool's Copy command looked like this: "Copy srcFile destFile --timeout 30"
+             GetOptionSingleArg("timeout") would return "30"
+            </summary>
+            <param name="option">long/full name of option</param>
+            <returns>The sub arg</returns>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParsedOptions.GetOptionOneOrMoreArgs(System.String)">
+            <summary>
+            If an option expects one or more sub args, this retrieves them.
+            Ex: If your tool's Copy command looked like this: "Copy srcFile destFile --ignore a.txt b.txt c.txt"
+             GetOptionSingleArg("timeout") would return the list "a.txt","b.txt","c.txt"
+            </summary>
+            <param name="option">long/full name of option</param>
+            <returns>The sub args</returns>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParsedOptions.GetOptionOneOrMoreArgs(Fray.CommandLineParser.ExpectedOption)">
+            <summary>
+            If an option expects one or more sub args, this retrieves them.
+            Ex: If your tool's Copy command looked like this: "Copy srcFile destFile --ignore a.txt b.txt c.txt"
+             GetOptionSingleArg("timeout") would return the list "a.txt","b.txt","c.txt"
+            </summary>
+            <param name="option">long/full name of option</param>
+            <returns>The sub args</returns>
+        </member>
+        <member name="T:Fray.CommandLineParser.ParseException">
+            <summary>
+            Exception thrown from the Parser.Parse function
+            </summary>
+        </member>
+        <member name="M:Fray.CommandLineParser.ParseException.#ctor(System.String)">
+            <summary>
+            Construct a ParseException object
+            </summary>
+            <param name="msg">The error message</param>
+        </member>
+        <member name="T:Fray.CommandLineParser.Parser">
+            <summary>
+            This class is used to parse a list of args into an Options object
+            </summary>
+        </member>
+        <member name="M:Fray.CommandLineParser.Parser.Parse(System.String[],System.Collections.Generic.IEnumerable{Fray.CommandLineParser.ExpectedOption})">
+            <summary>
+            Pass in a list of command line args and a list of ExpectedOption objects, and it will
+            parse the args into an Options object, which has a list of Option objects, and "stand alone" args.
+            Throws ParseException if something is unexpected or incorrect.
+            </summary>
+            <param name="args">The command line args array</param>
+            <param name="expectedOptions">Your list of options that are expected</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

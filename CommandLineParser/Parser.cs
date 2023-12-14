@@ -27,12 +27,12 @@ namespace Fray.CommandLineParser
         /// <param name="args">The command line args array</param>
         /// <param name="expectedOptions">Your list of options that are expected</param>
         /// <returns></returns>
-        public static Options Parse(string[] args, IEnumerable<ExpectedOption> expectedOptions)
+        public static ParsedOptions Parse(string[] args, IEnumerable<ExpectedOption> expectedOptions)
         {
             if (expectedOptions == null)
                 throw new ArgumentNullException();
 
-            Options options = new Options();
+            ParsedOptions options = new ParsedOptions();
 
             if (args == null || args.Length == 0)
                 return options;
@@ -66,7 +66,7 @@ namespace Fray.CommandLineParser
                     // If the current option needs params, and we haven't seen enough yet, error!
                     if (    currentOption != null
                         && (currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.OneParam || currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.OneOrMoreParams)
-                        &&  currentOption.option.args.Count == 0
+                        &&  currentOption.option.ArgsCount == 0
                        )
                     {
                         throw new ParseException($"Expected one arg after option '{currentOption.actualOptionString}'");
@@ -74,7 +74,7 @@ namespace Fray.CommandLineParser
 
                     // Add this new option
                     Option option = new Option(foundOption.expectedOption.Option);
-                    options.options.Add(option);
+                    options.Options.Add(option);
                     foundOption.option = option;
 
                     // This found option can now become the current option
@@ -87,17 +87,17 @@ namespace Fray.CommandLineParser
                     if (currentOption != null && currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.StandAlone)
                         throw new ParseException($"Unexpected arg after option '{currentOption.actualOptionString}'");
                     // If the current option expects 1 param, and this is 2+, error!
-                    if (currentOption != null && currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.OneParam && currentOption.option.args.Count == 1)
+                    if (currentOption != null && currentOption.expectedOption.OptionType == ExpectedOption.EOptionType.OneParam && currentOption.option.ArgsCount == 1)
                         throw new ParseException($"Unexpected second arg after option '{currentOption.actualOptionString}'");
 
                     // If we have a current option, then add this arg (error checks have already been done)
                     if (currentOption != null)
                     {
-                        currentOption.option.args.Add(arg);
+                        currentOption.option.AddArg(arg);
                     }
                     else // NO currentOption, so this is a stand alone arg
                     {
-                        options.standAloneArgs.Add(arg);
+                        options.StandAloneArgs.Add(arg);
                     }
                 }
             }
@@ -105,7 +105,7 @@ namespace Fray.CommandLineParser
             // If we are in a "current option", and it expected a param, but never got it, error!
             if (   currentOption != null
                 && currentOption.expectedOption.OptionType != ExpectedOption.EOptionType.StandAlone
-                && currentOption.option.args.Count == 0
+                && currentOption.option.ArgsCount == 0
                )
             {
                 throw new ParseException($"Expected one arg after option '{currentOption.actualOptionString}'");
