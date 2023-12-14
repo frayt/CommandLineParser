@@ -3,6 +3,8 @@ Simple lib for parsing command line arguments
 
 # Usage
 Create a list of ExpectedOption objects:  These are all the arg types that you might expect to be used by the caller
+(Note: This example uses the optional helper class ExpectedOptionWithHelp which derives from ExpectedOption.
+This is so that it's easy to have some easy Usage/Help output..)
 
 Call Parser.Parse() with that expected options list, and the string[] command line args, and a Options object will be returned
 
@@ -11,20 +13,74 @@ If the args contain anything invalid, ParseException will be thrown
 # Example
 
 ```
-      var expectedOptions = new List<ExpectedOption>()
-      {
-          new ExpectedOption("timeout", "t", ExpectedOption.EType.OneParam),
-          new ExpectedOption("port", "p", ExpectedOption.EType.OneParam),
-          new ExpectedOption("help", "h", ExpectedOption.EType.StandAlone),
-          new ExpectedOption("verbose", "v", ExpectedOption.EType.StandAlone)
-      };
-      Options options = Parser.Parse(args, expectedOptions);
 
-      // Example:
-      // Reading the args for your 'connectToServer' app would look like this:
-      // command-line example:  connectToServer.exe srv.someurl.com -p 9000 --timeout 60
+using System;
+using System.Collections.Generic;
+using Fray.CommandLineParser;
 
-      string uri = options.standAloneArgs[0];
-      int port = int.Parse(options.GetOption("port").args[0]);
-      int timeout = int.Parse(options.GetOption("timeout").args[0]);
+public static class CopyFilesTool
+{
+    private readonly static ExpectedOption _option_timeout =
+        new ExpectedOptionWithHelp("timeout", "t", ExpectedOption.EOptionType.OneParam, "<timeout in minutes>");
+    private readonly static ExpectedOption _option_verbose =
+        new ExpectedOptionWithHelp("verbose", "v", ExpectedOption.EOptionType.StandAlone, null, "Show verbose info during operation");
+    private readonly static ExpectedOption _option_ignoreFiles =
+        new ExpectedOptionWithHelp("ignore-these-files", "i", ExpectedOption.EOptionType.OneOrMoreParams, "<file1 [file2] [file3] [fileN]>");
+    private readonly static ExpectedOption _option_help =
+        new ExpectedOptionWithHelp("help", "h", ExpectedOption.EOptionType.StandAlone, null, "Show Usage/Help");
+
+    private static ExpectedOption[] _expectedOptions;
+    public static int Main_(string[] args)
+    {
+        _expectedOptions = new ExpectedOption[]
+        {
+            _option_timeout,
+            _option_verbose,
+            _option_ignoreFiles,
+            _option_help,
+        };
+
+        ParsedOptions options;
+        try
+        {
+            options = Parser.Parse(args, _expectedOptions);
+        }
+        catch (ParseException e)
+        {
+            Console.WriteLine("Error parsing arguments: " + e.Message);
+            return 1;
+        }
+
+        if (options.OptionExists("help"))
+        {
+            ShowUsage();
+            return 0;
+        }
+        if (options.StandAloneArgs.Count != 2)
+        {
+            Console.WriteLine("Expect 2 args specifying source and dest");
+            ShowUsage();
+            return 1;
+        }
+        string source = options.StandAloneArgs[0];
+        string dest = options.StandAloneArgs[1];
+        bool verbose = options.OptionExists(_option_verbose);
+        int.TryParse(options.GetOptionSingleArg(_option_timeout), out int timeout);
+        IReadOnlyList<string> ignoreTheseFiles = options.GetOptionOneOrMoreArgs(_option_ignoreFiles);
+
+        // Perform operation..
+        Console.WriteLine($"Args: {source} {dest} verbose:{verbose} timeout:{timeout} ignore-count:{ignoreTheseFiles.Count}");
+
+        return 0;
+    }
+
+    private static void ShowUsage()
+    {
+        Console.WriteLine($"Usage:");
+        Console.WriteLine($" CopyFiles source dest");
+        Console.WriteLine($"Optional params:");
+        foreach (var option in _expectedOptions)
+            Console.WriteLine(option.GetHelpText());
+    }
+}
 ```
