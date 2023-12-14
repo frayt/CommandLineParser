@@ -36,7 +36,7 @@ public static class CopyFilesTool
             return 1;
         }
 
-        if (options.OptionExists("help"))
+        if (options.OptionExists(_option_help))
         {
             ShowUsage();
             return 0;
