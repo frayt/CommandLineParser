@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard1.0</TargetFrameworks>
     <Version>1.1.0</Version>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>FrayCommandLineParser</PackageId>
+    <PackageId>FrayT.CommandLineParser</PackageId>
     <Title>Command Line Args Parser</Title>
     <Authors>FrayT</Authors>
     <Description>An easy to use library for parsing command line arguments</Description>
@@ -17,9 +17,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
-
   <ItemGroup>
-    <None Include="..\readme.md" Pack="true" PackagePath="\"/>
+    <None Include="..\readme.md" Pack="true" PackagePath="\" />
   </ItemGroup>  
 
+  <PropertyGroup>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>Copyright © Fraser Thompson 2022</Copyright>
+    <PackageProjectUrl>https://github.com/frayt/CommandLineParser</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/frayt/CommandLineParser</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
 </Project>
